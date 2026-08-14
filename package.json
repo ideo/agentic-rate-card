@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev --port 3002",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "sync:prices": "node scripts/sync-prices.mjs"
   },
   "dependencies": {
     "next": "^15.5.0",

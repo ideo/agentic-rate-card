@@ -29,3 +29,13 @@ For a production check:
 npm run build
 npm run start
 ```
+
+## Refresh model pricing
+
+The calculator reads its model rates from [`data/model-prices.json`](data/model-prices.json). To review the official provider pages before changing a rate, run:
+
+```bash
+npm run sync:prices
+```
+
+This creates a local `data/pricing-source-snapshot.json` with the latest price-related source snippets. Review it, update `data/model-prices.json`, and commit the revised rate file. The generated snapshot is intentionally ignored by Git so a provider-page layout change never silently changes published prices.

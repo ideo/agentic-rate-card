@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import priceData from "../data/model-prices.json";
 
 const outcomes = [
   { id: "research", label: "Research + synthesize", hint: "Deep research, online searching, evidence, and points of view", input: 0.8, output: 0.05 },
@@ -19,12 +20,7 @@ const modifiers = [
   { id: "infra", label: "Infrastructure work", hint: "Firebase, Vercel, Google Cloud, GPUs, builds, deployment, or monitoring", input: 0.6, output: 0.04 },
 ];
 
-const models = [
-  { name: "GPT-5.6 Sol", input: 5, output: 30, color: "#111" },
-  { name: "Claude Opus 5", input: 5, output: 30, color: "#555" },
-  { name: "Kimi K2 Thinking", input: 1.15, output: 8, color: "#777" },
-  { name: "GLM-4.5", input: 0.11, output: 0.28, color: "#aaa" },
-];
+const models = priceData.models;
 
 function money(value: number) {
   if (value < 0.01) return "<$0.01";
@@ -37,6 +33,7 @@ export default function Planner() {
   const [selectedModifiers, setSelectedModifiers] = useState<string[]>([]);
   const [hours, setHours] = useState(4);
   const [power, setPower] = useState(4);
+  const [showEstimateNote, setShowEstimateNote] = useState(true);
 
   const estimate = useMemo(() => {
     const primary = outcomes.find((item) => item.id === outcome) || outcomes[0];
@@ -57,7 +54,7 @@ export default function Planner() {
   return (
     <section className="planner" aria-labelledby="planner-heading">
       <div className="planner-controls">
-        <h2 id="planner-heading">Agentic workflow calculator</h2>
+        <div className="planner-heading"><h2 id="planner-heading">Agentic workflow calculator</h2><button className="estimate-help" type="button" onClick={() => setShowEstimateNote(true)}>About this estimate</button></div>
         <fieldset>
           <legend>1. Choose the primary outcome</legend>
           <div className="task-list">
@@ -93,6 +90,7 @@ export default function Planner() {
         </div>
         <p className="planner-footnote">One outcome establishes the base. Modifiers add the work that makes a workflow larger: project context, external sources, browser loops, visual iteration, verification, parallelism, and infrastructure.</p>
       </div>
+      {showEstimateNote && <div className="estimate-modal-backdrop" role="presentation"><div className="estimate-modal" aria-labelledby="estimate-modal-title" aria-modal="true" role="dialog"><p className="modal-kicker">Before you use the calculator</p><h3 id="estimate-modal-title">This is a ballpark estimate.</h3><p>Use it to compare approaches and set a budget range—not as a quote, invoice, or promise of delivery time.</p><p>Actual cost can move with model choice, cached context, long files or codebases, screenshots, browser/tool loops, retries, parallel agents, and cloud or GPU usage.</p><button type="button" onClick={() => setShowEstimateNote(false)}>Got it</button></div></div>}
     </section>
   );
 }

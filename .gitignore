@@ -3,5 +3,6 @@ rendered-v*/
 .next/
 .vercel/
 node_modules/
+data/pricing-source-snapshot.json
 .vercel
 .env*
