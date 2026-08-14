@@ -1,2 +1,5 @@
 rendered-v*/
 .DS_Store
+.next/
+.vercel/
+node_modules/
