@@ -38,7 +38,7 @@ export default function Planner() {
   }, [hours, power, selected]);
 
   const costs = models.map((model) => ({ ...model, cost: estimate.input * model.input + estimate.output * model.output }));
-  const maxCost = Math.max(...costs.map((model) => model.cost), 1);
+  const scaleMax = Math.max(100, Math.ceil(Math.max(...costs.map((model) => model.cost), 1) / 100) * 100);
 
   function toggle(id: string) {
     setSelected((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
@@ -48,8 +48,7 @@ export default function Planner() {
     <section className="planner" aria-labelledby="planner-heading">
       <div className="planner-controls">
         <p className="eyebrow">Planning tool</p>
-        <h2 id="planner-heading">Shape the work before you price it.</h2>
-        <p className="planner-intro">Choose what needs to get done, how long you have, and how much reasoning the work needs. These are theoretical planning estimates—not a quote.</p>
+        <h2 id="planner-heading">Agentic workflow calculator</h2>
         <fieldset>
           <legend>What needs to get done?</legend>
           <div className="task-list">
@@ -70,8 +69,9 @@ export default function Planner() {
         <div className="estimate-strip"><span>Estimated input</span><strong>{estimate.input.toFixed(1)}M</strong><span>Estimated output</span><strong>{estimate.output.toFixed(2)}M</strong></div>
         <h3>Cost by model</h3>
         <p className="chart-note">API-equivalent estimate for the selected work. Cached input and GPU costs are not included.</p>
+        <div className="chart-guide"><span>Scale: $0–${scaleMax}</span><span>Bars grow as the estimate grows</span></div>
         <div className="cost-chart" role="img" aria-label="Estimated cost by model">
-          {costs.map((model) => <div className="cost-row" key={model.name}><div className="cost-name"><span>{model.name}</span><strong>{money(model.cost)}</strong></div><div className="bar-track"><span className="bar" style={{ width: `${Math.max((model.cost / maxCost) * 100, 3)}%`, background: model.color }} /></div></div>)}
+          {costs.map((model) => <div className="cost-row" key={model.name}><div className="cost-name"><span>{model.name}</span><strong>{money(model.cost)}</strong></div><div className="bar-track"><span className="bar" style={{ width: `${Math.min((model.cost / scaleMax) * 100, 100)}%`, background: model.color }} /></div></div>)}
         </div>
         <p className="planner-footnote">The biggest levers are repeated context, output length, model switching, tool calls, and parallel agents. Use the result to choose a lane on the rate card.</p>
       </div>
