@@ -12,6 +12,13 @@ export const metadata: Metadata = {
     description: "A practical planning guide for estimating agentic AI workflows and costs.",
     type: "website",
     url: "https://agentic-rate-card-ideo-vanderlin.vercel.app/",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Agentic Rate Card — planning AI workflow time, tokens, and cost" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Agentic Rate Card",
+    description: "A practical planning guide for estimating agentic AI workflows and costs.",
+    images: ["/opengraph-image"],
   },
 };
 
