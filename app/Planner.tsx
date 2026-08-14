@@ -3,18 +3,20 @@
 import { useMemo, useState } from "react";
 
 const outcomes = [
-  { id: "research", label: "Research + synthesize", hint: "Find evidence and produce a point of view", input: 0.8, output: 0.05 },
-  { id: "build", label: "Build or edit an app", hint: "Implement features, pages, and tests", input: 2.5, output: 0.08 },
-  { id: "knowledge", label: "Deep knowledge work", hint: "Challenge assumptions and make a decision", input: 6, output: 0.15 },
-  { id: "video", label: "Build an AI video pipeline", hint: "Models, workers, GPUs, and deployment", input: 20, output: 0.5 },
+  { id: "research", label: "Research + synthesize", hint: "Deep research, online searching, evidence, and points of view", input: 0.8, output: 0.05 },
+  { id: "build", label: "Build or edit an app", hint: "Build a feature, update a page, or test and revise behavior", input: 2.5, output: 0.08 },
+  { id: "knowledge", label: "Deep knowledge work", hint: "Challenge assumptions, compare tradeoffs, and make a decision", input: 6, output: 0.15 },
+  { id: "video", label: "Build an AI video pipeline", hint: "Evaluate models, set up workers, deploy GPUs, and test", input: 20, output: 0.5 },
 ];
 
 const modifiers = [
-  { id: "sources", label: "Connected sources", hint: "Slack, Figma, files, or web research", input: 0.35, output: 0.02 },
-  { id: "visual", label: "Visual iteration", hint: "Screenshots and repeated design tweaks", input: 0.45, output: 0.03 },
+  { id: "codebase", label: "Existing codebase", hint: "Read repo structure, trace dependencies, and understand the implementation", input: 0.7, output: 0.04 },
+  { id: "sources", label: "Connected sources", hint: "Search Slack, Figma, documents, files, or the web", input: 0.35, output: 0.02 },
+  { id: "browser", label: "Browser control", hint: "Navigate a live site, test flows, capture browser state, and retry", input: 0.35, output: 0.03 },
+  { id: "visual", label: "Visual iteration", hint: "Use screenshots to refine CSS, JavaScript, and UI details", input: 0.45, output: 0.03 },
   { id: "review", label: "Tests + review loop", hint: "Run, inspect, critique, and retry", input: 0.3, output: 0.04 },
   { id: "parallel", label: "Parallel agents", hint: "Multiple worktrees or specialist agents", input: 0.9, output: 0.08 },
-  { id: "infra", label: "Infrastructure work", hint: "GPU setup, builds, deployment, monitoring", input: 0.6, output: 0.04 },
+  { id: "infra", label: "Infrastructure work", hint: "Firebase, Vercel, Google Cloud, GPUs, builds, deployment, or monitoring", input: 0.6, output: 0.04 },
 ];
 
 const models = [
@@ -89,7 +91,7 @@ export default function Planner() {
         <div className="cost-chart" role="img" aria-label="Estimated cost by model">
           {costs.map((model) => <div className="cost-row" key={model.name}><div className="cost-name"><span>{model.name}</span><strong>{money(model.cost)}</strong></div><div className="bar-track"><span className="bar" style={{ width: `${Math.min((model.cost / scaleMax) * 100, 100)}%`, background: model.color }} /></div></div>)}
         </div>
-        <p className="planner-footnote">This is additive at the workflow level: one outcome plus extra context, iteration, review, parallelism, or infrastructure. It is not the sum of unrelated tasks.</p>
+        <p className="planner-footnote">One outcome establishes the base. Modifiers add the work that makes a workflow larger: project context, external sources, browser loops, visual iteration, verification, parallelism, and infrastructure.</p>
       </div>
     </section>
   );
