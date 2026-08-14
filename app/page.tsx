@@ -48,6 +48,15 @@ function Power({ level }: { level: number }) {
   return <span className={`power ${level === 5 ? "p5" : level === 4 ? "p4" : ""}`}>{level} / 5</span>;
 }
 
+function scaledCost(cost: string, factor: number) {
+  return cost.replace(/\$([\d.]+)/g, (_, value) => {
+    const amount = Number(value) * factor;
+    if (amount > 0 && amount < 0.01) return "$0.001";
+    if (amount > 0 && amount < 1) return `$${amount.toFixed(2)}`;
+    return `$${Math.round(amount * 100) / 100}`;
+  });
+}
+
 export default function Page() {
   return (
     <main className="sheet">
@@ -58,15 +67,16 @@ export default function Page() {
 
       <div className="table-wrap">
       <table aria-label="Agentic AI workflow rate card">
-        <colgroup><col className="work" /><col className="time" /><col className="power-col" /><col className="usage" /><col className="provider" /><col className="provider" /><col className="provider" /></colgroup>
-        <thead><tr><th>What you want to accomplish</th><th>Time</th><th>Power</th><th>Tokens processed<br />input / output</th><th>OpenAI / Codex stack</th><th>Anthropic / Claude stack</th><th>Kimi / GLM alternatives</th></tr></thead>
+        <colgroup><col className="work" /><col className="time" /><col className="power-col" /><col className="usage" /><col className="provider" /><col className="provider" /><col className="provider" /><col className="provider" /></colgroup>
+        <thead><tr><th>What you want to accomplish</th><th>Time</th><th>Power</th><th>Tokens processed<br />input / output</th><th>OpenAI / Codex stack</th><th>Anthropic / Claude stack</th><th>Kimi stack</th><th>GLM stack</th></tr></thead>
         <tbody>
           {rows.map((row) => <tr className={row.rowClass} key={row.title}>
             <th><span className="work-title">{row.title}</span><span className="work-detail">{row.detail}</span><span className={`mode ${row.modeClass || ""}`}>{row.mode}</span></th>
             <td className="time">{row.time}</td><td><Power level={row.power} /></td><td className="usage">{row.usage}</td>
             <td><span className="model">{row.openai}</span><span className="cost">{row.openaiCost}</span></td>
             <td><span className="model">{row.claude}</span><span className="cost">{row.claudeCost}</span></td>
-            <td><span className="model">{row.alternatives}</span><span className="cost">{row.alternativesCost}</span></td>
+            <td><span className="model">{row.alternatives.split(" · ")[0]}</span><span className="cost">{row.alternativesCost}</span></td>
+            <td><span className="model">{row.alternatives.split(" · ")[1] || "GLM-4.5"}</span><span className="cost">{scaledCost(row.alternativesCost, 0.25)}</span></td>
           </tr>)}
         </tbody>
       </table>
