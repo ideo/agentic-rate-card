@@ -76,7 +76,7 @@ export default function Page() {
       <div className="table-wrap">
       <table aria-label="Agentic AI workflow rate card">
         <colgroup><col className="work" /><col className="time" /><col className="power-col" /><col className="usage" /><col className="provider" /><col className="provider" /><col className="provider" /><col className="provider" /></colgroup>
-        <thead><tr><th>What you want to accomplish</th><th>Time</th><th>Power</th><th>Tokens processed<br />input / output</th><th>OpenAI / Codex</th><th>Anthropic / Claude</th><th>Kimi</th><th>GLM</th></tr></thead>
+        <thead><tr><th>What you want to accomplish</th><th>Time</th><th>Power</th><th>Tokens in/out</th><th>OpenAI / Codex</th><th>Anthropic / Claude</th><th>Kimi</th><th>GLM</th></tr></thead>
         <tbody>
           {rows.map((row) => <tr className={row.rowClass} key={row.title}>
             <th><span className="work-title">{row.title}</span><span className="work-detail">{row.detail}</span><span className={`mode ${row.modeClass || ""}`}>{row.mode}</span></th>
