@@ -55,7 +55,6 @@ export default function Planner() {
   return (
     <section className="planner" aria-labelledby="planner-heading">
       <div className="planner-controls">
-        <p className="eyebrow">Planning tool</p>
         <h2 id="planner-heading">Agentic workflow calculator</h2>
         <fieldset>
           <legend>1. Choose the primary outcome</legend>
