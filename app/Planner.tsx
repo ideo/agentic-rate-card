@@ -75,7 +75,7 @@ export default function Planner() {
             </label>)}
           </div>
         </fieldset>
-        <label className="range-label">Time available <strong>{hours} {hours === 1 ? "hour" : "hours"}</strong>
+        <label className="range-label">Agent run time <strong>{hours} {hours === 1 ? "hour" : "hours"}</strong>
           <input type="range" min="1" max="24" value={hours} onChange={(event) => setHours(Number(event.target.value))} />
         </label>
         <label className="range-label">Reasoning power <strong>{power} / 5</strong>
