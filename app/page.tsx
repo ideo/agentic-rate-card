@@ -1,5 +1,7 @@
 export const dynamic = "force-dynamic";
 
+import Planner from "./Planner";
+
 type Row = {
   title: string;
   detail: string;
@@ -92,6 +94,8 @@ export default function Page() {
           <p><strong>Cost assumption:</strong> Chat rows use standard list prices. Agentic rows assume repeated context is mostly cached—about 15% of standard input cost—while output is full price. The provider columns show a <strong>model stack</strong>, not one model. Kimi / GLM ranges are rough API planning estimates; plans and regional pricing can differ.</p>
         </div>
       </section>
+
+      <Planner />
 
       <section className="terms" aria-labelledby="terms-heading"><h2 id="terms-heading">Terminology</h2><div className="terms-grid">{terms.map(([term, description]) => <div className="term" key={term}><strong>{term}</strong>{description}</div>)}</div></section>
     </main>
