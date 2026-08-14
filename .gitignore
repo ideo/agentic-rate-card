@@ -1,6 +1,7 @@
 rendered-v*/
 .DS_Store
 .next/
+*.tsbuildinfo
 .vercel/
 node_modules/
 data/pricing-source-snapshot.json
