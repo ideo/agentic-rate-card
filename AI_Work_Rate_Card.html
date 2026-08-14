@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Work Rate Card</title>
+  <style>
+    :root {
+      --ink: #111111;
+      --muted: #555555;
+      --line: #c9c8c3;
+      --paper: #f7f6f2;
+      --page: #f7f6f2;
+      --acid: #111111;
+      --acid-soft: #f0efe9;
+      --blue-soft: #f2f1ed;
+      --navy: #111111;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.35;
+    }
+
+    .sheet {
+      position: relative;
+      width: min(1400px, calc(100% - 70px));
+      margin: 26px auto;
+      padding: 0 0 24px;
+      background: var(--paper);
+      border: 0;
+      border-top: 1px solid #444;
+      border-bottom: 1px solid #444;
+      overflow: hidden;
+    }
+
+    .sheet::before {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 0;
+      background: none;
+      opacity: 0;
+      content: "";
+      pointer-events: none;
+    }
+
+    header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 28px;
+      position: relative;
+      margin-bottom: 28px;
+      padding: 32px 0 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 5px;
+      color: #222;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 920px;
+      color: #111;
+      font-size: clamp(38px, 4.4vw, 66px);
+      font-weight: 300;
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    h1 span { color: #111; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 150px;
+      min-height: 46px;
+      padding: 10px 0;
+      border-bottom: 1px solid #444;
+      color: #222;
+      font-size: 13.5px;
+      font-weight: 400;
+      text-align: right;
+    }
+
+    .updated {
+      min-width: 150px;
+      padding: 10px 0;
+      border-bottom: 1px solid #444;
+      color: #555;
+      font-size: 12px;
+      line-height: 1.35;
+      text-align: right;
+    }
+
+    .updated strong {
+      color: #111;
+      font-weight: 400;
+    }
+
+    .intro {
+      max-width: 630px;
+      margin: 8px 0 0;
+      color: #555;
+      font-size: 15px;
+      font-weight: 400;
+    }
+
+    .intro strong { color: #111; font-weight: 600; }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      border: 0;
+      border-top: 1px solid #444;
+      border-bottom: 1px solid #444;
+      overflow: hidden;
+      font-size: 12px;
+    }
+
+    col.work { width: 28%; }
+    col.time { width: 8%; }
+    col.power { width: 8%; }
+    col.usage { width: 16%; }
+    col.provider { width: 20%; }
+
+    thead th:nth-child(5),
+    tbody td:nth-child(5),
+    thead th:nth-child(6),
+    tbody td:nth-child(6) { width: 20%; }
+
+    thead th {
+      padding: 17px 12px;
+      background: transparent;
+      color: #222;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      text-align: left;
+      text-transform: uppercase;
+      border-bottom: 1px solid #444;
+    }
+
+    tbody th,
+    tbody td {
+      padding: 17px 12px;
+      border-top: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    tbody th {
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .work-title { display: block; }
+
+    .work-detail {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 400;
+      line-height: 1.25;
+    }
+
+    .mode {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 4px 9px;
+      border: 1px solid var(--muted);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .mode.agentic,
+    .mode.multi { border-color: var(--acid); color: var(--acid); }
+
+    tbody tr:nth-child(even) { background: transparent; }
+    tbody tr.heavy { background: var(--blue-soft); }
+    tbody tr.extreme { background: var(--acid-soft); }
+    tbody tr.extreme th { color: var(--acid); }
+
+    .time,
+    .usage { white-space: nowrap; }
+
+    .power {
+      display: inline-block;
+      min-width: 70px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--muted);
+      background: transparent;
+      color: #111;
+      font-size: 11px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .power.p4 { border-color: #777; color: #111; }
+    .power.p5 { border-color: #111; background: #111; color: #f7f6f2; }
+
+    .model {
+      display: block;
+      font-weight: 750;
+    }
+
+    .cost {
+      display: block;
+      margin-top: 1px;
+      color: #111;
+      font-weight: 800;
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 22px;
+      margin-top: 15px;
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .notes p { margin: 0 0 5px; }
+    .notes strong { color: #111; }
+
+    .terms {
+      margin-top: 26px;
+      padding-top: 18px;
+      border-top: 1px solid #444;
+    }
+
+    .terms h2 {
+      margin: 0 0 14px;
+      font-size: 21px;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+    }
+
+    .terms-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px 26px;
+    }
+
+    .term {
+      color: #555;
+      font-size: 11.5px;
+      line-height: 1.35;
+    }
+
+    .term strong {
+      display: block;
+      margin-bottom: 2px;
+      color: #111;
+      font-size: 12px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-bottom: 7px;
+    }
+
+    .source a { color: #111; }
+
+    @media (max-width: 800px) {
+      .sheet { width: 100%; margin: 0; padding: 0 14px 20px; border: 0; border-top: 1px solid #444; border-bottom: 1px solid #444; }
+      header { display: block; }
+      .intro { margin-top: 10px; }
+      .table-wrap { overflow-x: auto; }
+      table { min-width: 980px; }
+      .notes { grid-template-columns: 1fr; }
+      .terms-grid { grid-template-columns: 1fr; }
+    }
+
+    @page { size: letter landscape; margin: 0.22in; }
+
+    @media print {
+      body { background: var(--paper); }
+      .sheet {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .sheet::before { height: 0; }
+      header { margin-bottom: 10px; padding-top: 4px; }
+      h1 { font-size: 34px; }
+      .intro { max-width: 560px; font-size: 9px; }
+      .tag { min-width: 112px; min-height: 34px; font-size: 9px; }
+      table { font-size: 8.2px; }
+      thead th { padding: 4px 6px; font-size: 7.5px; }
+      tbody th, tbody td { padding: 2px 6px; }
+      .work-detail { font-size: 7.2px; line-height: 1.12; }
+      .mode { margin-top: 2px; padding: 1px 4px; font-size: 6.5px; }
+      .power { min-width: 52px; padding: 2px 4px; font-size: 7.5px; }
+      .notes { gap: 12px; margin-top: 5px; font-size: 7.3px; line-height: 1.2; }
+      .notes p { margin-bottom: 3px; }
+      .legend { gap: 3px 8px; margin-bottom: 3px; }
+      .terms { margin-top: 8px; padding-top: 6px; }
+      .terms h2 { margin-bottom: 5px; font-size: 10px; }
+      .terms-grid { grid-template-columns: repeat(3, 1fr); gap: 4px 10px; }
+      .term { font-size: 6.7px; line-height: 1.15; }
+      .term strong { margin-bottom: 1px; font-size: 7px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header>
+      <div>
+        <h1><span>Agentic</span> Rate Card</h1>
+      </div>
+      <div class="updated">Updated<br><strong>August 14, 2026</strong></div>
+    </header>
+
+    <div class="table-wrap">
+      <table aria-label="AI work rate card">
+        <colgroup>
+          <col class="work"><col class="time"><col class="power">
+          <col class="usage"><col class="provider"><col class="provider">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>What you want to accomplish</th>
+            <th>Time</th>
+            <th>Power</th>
+            <th>Tokens processed<br>input / output</th>
+            <th>OpenAI / Codex stack</th>
+            <th>Anthropic / Claude stack</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="work-title">Ask a question, draft, or rewrite</span><span class="work-detail">Explain an idea, improve a paragraph, or make a quick first draft.</span><span class="mode">Chat</span></th>
+            <td class="time">10 sec–2 min</td>
+            <td><span class="power">2 / 5</span></td>
+            <td class="usage">1–10K / 0.2–2K</td>
+            <td><span class="model">GPT-5.6 Luna</span><span class="cost">&lt;$0.001–$0.005</span></td>
+            <td><span class="model">Claude Haiku 4.5</span><span class="cost">$0.002–$0.02</span></td>
+          </tr>
+          <tr>
+            <th><span class="work-title">Do one Slack action</span><span class="work-detail">Ask for a channel summary, find details in a thread, or draft a reply.</span><span class="mode">Connected chat</span></th>
+            <td class="time">1–5 min</td>
+            <td><span class="power">2 / 5</span></td>
+            <td class="usage">10–100K / 1–8K</td>
+            <td><span class="model">GPT-5.6 Luna</span><span class="cost">$0.003–$0.03</span></td>
+            <td><span class="model">Claude Haiku 4.5</span><span class="cost">$0.02–$0.14</span></td>
+          </tr>
+          <tr>
+            <th><span class="work-title">Summarize a document or meeting</span><span class="work-detail">Turn one transcript, deck, or report into themes, decisions, and next steps.</span><span class="mode">Chat + file</span></th>
+            <td class="time">3–15 min</td>
+            <td><span class="power">3 / 5</span></td>
+            <td class="usage">20–150K / 2–12K</td>
+            <td><span class="model">GPT-5.6 Terra</span><span class="cost">$0.06–$0.44</span></td>
+            <td><span class="model">Claude Sonnet 5</span><span class="cost">$0.06–$0.42</span></td>
+          </tr>
+          <tr>
+            <th><span class="work-title">Search Slack or Figma and synthesize</span><span class="work-detail">Explore many channels, frames, or comments and turn the evidence into themes.</span><span class="mode agentic">Connected agent</span></th>
+            <td class="time">10–45 min</td>
+            <td><span class="power p4">4 / 5</span></td>
+            <td class="usage">0.1–1M / 5–50K</td>
+            <td><span class="model">GPT-5.6 Terra</span><span class="cost">$0.09–$0.90</span></td>
+            <td><span class="model">Claude Sonnet 5</span><span class="cost">$0.08–$0.80</span></td>
+          </tr>
+          <tr>
+            <th><span class="work-title">Research, analyze data, or create a shareable document</span><span class="work-detail">Gather sources, compare evidence, develop a point of view, and polish a DOCX, HTML file, spreadsheet, slide deck, or PDF.</span><span class="mode agentic">Research agent</span></th>
+            <td class="time">15–90 min</td>
+            <td><span class="power p4">4 / 5</span></td>
+            <td class="usage">0.5–3M / 20–150K</td>
+            <td><span class="model">GPT-5.6 Terra</span><span class="cost">$0.39–$2.70</span></td>
+            <td><span class="model">Claude Sonnet 5</span><span class="cost">$0.35–$2.40</span></td>
+          </tr>
+          <tr>
+            <th><span class="work-title">Make small edits to a web app</span><span class="work-detail">Change styles, adjust a component, fix a contained bug, or add one new page.</span><span class="mode agentic">Coding agent</span></th>
+            <td class="time">10–60 min</td>
+            <td><span class="power p4">4 / 5</span></td>
+            <td class="usage">0.5–3M / 5–40K</td>
+            <td><span class="model">Codex · GPT-5.6 Terra</span><span class="cost">$0.21–$1.38</span></td>
+            <td><span class="model">Claude Code · Sonnet 5</span><span class="cost">$0.20–$1.30</span></td>
+          </tr>
+          <tr>
+            <th><span class="work-title">Iterate heavily on the design of an app</span><span class="work-detail">Take many screenshots, compare visual details, and go back and forth until it feels right.</span><span class="mode agentic">Visual coding agent</span></th>
+            <td class="time">1–4 hr</td>
+            <td><span class="power p4">4 / 5</span></td>
+            <td class="usage">2–10M / 20–120K</td>
+            <td><span class="model">Codex · GPT-5.6 Terra</span><span class="cost">$0.84–$4.44</span></td>
+            <td><span class="model">Claude Code · Sonnet 5</span><span class="cost">$0.80–$4.20</span></td>
+          </tr>
+          <tr>
+            <th><span class="work-title">Diagnose a difficult software problem or review code</span><span class="work-detail">Trace behavior across a codebase, reproduce the issue, test theories, and verify a fix.</span><span class="mode agentic">Reasoning agent</span></th>
+            <td class="time">30 min–3 hr</td>
+            <td><span class="power p5">5 / 5</span></td>
+            <td class="usage">2–15M / 20–150K</td>
+            <td><span class="model">Codex · GPT-5.6 Sol</span><span class="cost">$2.10–$15.75</span></td>
+            <td><span class="model">Claude Code · Opus 5</span><span class="cost">$2–$15</span></td>
+          </tr>
+          <tr class="heavy">
+            <th><span class="work-title">Deep, decision-ready knowledge work</span><span class="work-detail">Work across many sources, challenge assumptions, synthesize a position, and refine it.</span><span class="mode agentic">Long-running agent</span></th>
+            <td class="time">2–6 hr</td>
+            <td><span class="power p5">5 / 5</span></td>
+            <td class="usage">3–20M / 50–300K</td>
+            <td><span class="model">Codex · GPT-5.6 Sol</span><span class="cost">$3.75–$24</span></td>
+            <td><span class="model">Claude Code · Opus 5</span><span class="cost">$3.50–$22.50</span></td>
+          </tr>
+          <tr class="heavy">
+            <th><span class="work-title">A heavy day of software development</span><span class="work-detail">Implement several features, debug, run tests, review the whole system, and revise repeatedly.</span><span class="mode agentic">Coding agent</span></th>
+            <td class="time">4–10 hr</td>
+            <td><span class="power p5">5 / 5</span></td>
+            <td class="usage">8–40M / 0.1–0.6M</td>
+            <td><span class="model">Codex · Terra → Sol</span><span class="cost">$9–$48</span></td>
+            <td><span class="model">Claude Code · Sonnet → Opus</span><span class="cost">$8.50–$45</span></td>
+          </tr>
+          <tr class="heavy">
+            <th><span class="work-title">Build a modest first version of an app from zero</span><span class="work-detail">Plan the structure, create the interface, connect data, test the flows, and make it shareable.</span><span class="mode agentic">Build agent</span></th>
+            <td class="time">8–24 hr</td>
+            <td><span class="power p5">5 / 5</span></td>
+            <td class="usage">15–80M / 0.2–1.2M</td>
+            <td><span class="model">Codex · Terra → Sol</span><span class="cost">$17–$96</span></td>
+            <td><span class="model">Claude Code · Sonnet → Opus</span><span class="cost">$16–$90</span></td>
+          </tr>
+          <tr class="heavy">
+            <th><span class="work-title">Build and test an AI video pipeline</span><span class="work-detail">Research video models, compare renders, wire the pipeline, package model weights, deploy GPU workers, and monitor cloud tests.</span><span class="mode multi">Model + infra stack</span></th>
+            <td class="time">1–3 days</td>
+            <td><span class="power p5">5 / 5</span></td>
+            <td class="usage">50–250M / 0.3–10M</td>
+            <td><span class="model">Codex · Terra + Sol + video models</span><span class="cost">$50–$500 + GPU</span></td>
+            <td><span class="model">Claude Code · Sonnet + Opus + video models</span><span class="cost">$45–$450 + GPU</span></td>
+          </tr>
+          <tr class="extreme">
+            <th><span class="work-title">Extreme: overnight team of 4–8 AI agents</span><span class="work-detail">Split a large goal into parallel research, design, build, testing, and review workstreams.</span><span class="mode multi">Multi-agent</span></th>
+            <td class="time">8–16 hr</td>
+            <td><span class="power p5">5 / 5</span></td>
+            <td class="usage">40–250M / 0.5–4M</td>
+            <td><span class="model">Codex · Terra + Sol team</span><span class="cost">$45–$308</span></td>
+            <td><span class="model">Claude Code · Sonnet + Opus</span><span class="cost">$43–$288</span></td>
+          </tr>
+          <tr class="extreme">
+            <th><span class="work-title">Extreme: agent swarm across working trees</span><span class="work-detail">Run 8–20 coding agents in parallel branches or worktrees, with continuous tests, reviews, merges, and retries.</span><span class="mode multi">Agent swarm</span></th>
+            <td class="time">4–8 hr</td>
+            <td><span class="power p5">5 / 5</span></td>
+            <td class="usage">60–250M / 5–20M</td>
+            <td><span class="model">Codex · Terra + Sol swarm</span><span class="cost">$200–$800</span></td>
+            <td><span class="model">Claude Code · Sonnet + Opus swarm</span><span class="cost">$170–$690</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <section class="notes">
+      <div>
+        <div class="legend">
+          <span><strong>2/5</strong> fast + economical</span>
+          <span><strong>4/5</strong> strong synthesis</span>
+          <span><strong>5/5</strong> maximum reasoning</span>
+        </div>
+        <p><strong>Input</strong> includes repeated and cached reading; <strong>output</strong> includes what the model writes or reasons through. K = thousand tokens; M = million. An <strong>agent</strong> can use tools and complete a workstream.</p>
+      </div>
+      <div>
+        <p><strong>Validated locally:</strong> Agentic Codex and Claude Code turns processed roughly 3–5M median input tokens versus 0.4–0.9M for no-tool turns. This is why coding and deep-work rows are materially heavier than chat. A swarm across working trees can reach hundreds of millions of processed tokens.</p>
+        <p><strong>Cost assumption:</strong> Chat rows use standard list prices. Agentic rows assume repeated context is mostly cached—about 15% of standard input cost—while output is full price. The provider columns show a <strong>model stack</strong>, not one model: agents commonly switch models for planning, coding, image/video generation, review, and infrastructure. GPU runtime, images, search, connectors, hosting, subscriptions, and human time vary or are excluded unless marked “+ GPU.”</p>
+        <p><strong>Accuracy:</strong> Published prices and arithmetic are current as of August 12, 2026. Time, power, and usage bands are planning ranges, not guarantees or SLAs.</p>
+        <p class="source"><a href="https://developers.openai.com/api/docs/pricing">OpenAI pricing</a> · <a href="https://platform.claude.com/docs/en/about-claude/pricing">Anthropic pricing</a></p>
+      </div>
+    </section>
+
+    <section class="terms" aria-label="Agentic workflow terminology">
+      <h2>Terminology</h2>
+      <div class="terms-grid">
+        <div class="term"><strong>Input tokens</strong>Text, code, images, and tool results the model reads.</div>
+        <div class="term"><strong>Output tokens</strong>Text, code, reasoning, and structured results the model produces.</div>
+        <div class="term"><strong>Cached input</strong>Previously processed context reused at a discounted input price.</div>
+        <div class="term"><strong>Cache write</strong>The first time reusable context is stored; it can cost more than a cache read.</div>
+        <div class="term"><strong>Model stack</strong>A workflow that switches models for planning, coding, generation, review, or infrastructure.</div>
+        <div class="term"><strong>Agentic workflow</strong>A model uses tools, observes results, makes decisions, and continues toward an outcome.</div>
+        <div class="term"><strong>Tool call</strong>An action such as searching, editing files, running tests, or deploying a service.</div>
+        <div class="term"><strong>Working tree</strong>An isolated code workspace where an agent can make changes without blocking others.</div>
+        <div class="term"><strong>GPU / infrastructure</strong>Non-model costs for compute, storage, model downloads, builds, and hosted services.</div>
+        <div class="term"><strong>Human review</strong>Your time spent directing the work, checking outputs, and deciding what ships.</div>
+        <div class="term"><strong>Context window</strong>The maximum amount of conversation and project material a model can use at once.</div>
+        <div class="term"><strong>Raw API-equivalent cost</strong>A planning estimate based on published token prices, before subscriptions or credits.</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
