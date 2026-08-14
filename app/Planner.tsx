@@ -90,7 +90,7 @@ export default function Planner() {
         </div>
         <p className="planner-footnote">One outcome establishes the base. Modifiers add the work that makes a workflow larger: project context, external sources, browser loops, visual iteration, verification, parallelism, and infrastructure.</p>
       </div>
-      {showEstimateNote && <div className="estimate-modal-backdrop" role="presentation"><div className="estimate-modal" aria-labelledby="estimate-modal-title" aria-modal="true" role="dialog"><p className="modal-kicker">Before you use the calculator</p><h3 id="estimate-modal-title">This is a ballpark estimate.</h3><p>Use it to compare approaches and set a budget range—not as a quote, invoice, or promise of delivery time.</p><p>Actual cost can move with model choice, cached context, long files or codebases, screenshots, browser/tool loops, retries, parallel agents, and cloud or GPU usage.</p><button type="button" onClick={() => setShowEstimateNote(false)}>Got it</button></div></div>}
+      {showEstimateNote && <div className="estimate-modal-backdrop" role="presentation"><div className="estimate-modal" aria-labelledby="estimate-modal-title" aria-modal="true" role="dialog"><p className="modal-kicker">Before you use this rate card</p><h3 id="estimate-modal-title">This is a ballpark estimate.</h3><p>Use it to compare approaches and set a budget range—not as a quote, invoice, or promise of delivery time.</p><p>Actual cost can move with model choice, cached context, long files or codebases, screenshots, browser/tool loops, retries, parallel agents, and cloud or GPU usage.</p><button type="button" onClick={() => setShowEstimateNote(false)}>Got it</button></div></div>}
     </section>
   );
 }
