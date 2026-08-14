@@ -3,3 +3,5 @@ rendered-v*/
 .next/
 .vercel/
 node_modules/
+.vercel
+.env*

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Thread Usage"
+  short_description: "Report Codex token usage and estimated thread cost"
+  default_prompt: "Show the current Codex thread token usage, cache breakdown, tool calls, elapsed span, and estimated API-equivalent cost."

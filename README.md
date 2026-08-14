@@ -12,7 +12,7 @@ The page is content-first and rendered on the server for search engines and a fa
 - [`AI_Project_Token_Cost_One_Page.md`](AI_Project_Token_Cost_One_Page.md) — Markdown companion
 - [`AI_Project_Token_Cost_Guide.docx`](AI_Project_Token_Cost_Guide.docx) — longer-form document
 
-The SSR app is also published at [ai-project-cost-guide.vercel.app](https://ai-project-cost-guide.vercel.app/).
+The SSR app is also published at [agentic-rate-card-ideo-vanderlin.vercel.app](https://agentic-rate-card-ideo-vanderlin.vercel.app/).
 
 ## Run locally
 

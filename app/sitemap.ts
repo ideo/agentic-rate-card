@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [{ url: "https://ai-project-cost-guide.vercel.app/", lastModified: new Date() }];
+  return [{ url: "https://agentic-rate-card-ideo-vanderlin.vercel.app/", lastModified: new Date() }];
 }
