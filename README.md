@@ -21,6 +21,8 @@ npm install
 npm run dev
 ```
 
+The local development server runs at `http://localhost:3002` so it does not collide with other projects using port 3000.
+
 For a production check:
 
 ```bash
